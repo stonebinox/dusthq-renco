@@ -6,7 +6,7 @@ Last Modified: 27/10/17 11:56
 Comments: Main class file for 
 discount_master table.
 ------------------------------*/
-class discountMaster 
+class discountMaster extends itemMaster
 {
     public $app=NULL;
     public $discountValid=false;
@@ -26,7 +26,7 @@ class discountMaster
         {
             $discountID=$this->discount_id;
             $app=$this->app;
-            $dm="SELECT iddiscount_master FROM discount_master WHERE stat='1' AND iddiscount_master='$discountID'";
+            $dm="SELECT iddiscount_master FROM discount_master WHERE stat!='0' AND iddiscount_master='$discountID'";
             $dm=$app['db']->fetchAssoc($dm);
             if(($dm!="")&&($dm!=NULL))
             {

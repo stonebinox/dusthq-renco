@@ -43,4 +43,15 @@ $app->get('/getItems', function() use($app){
         return $items;
     }
 });
+$app->post("/book",function(Request $request) use($app){
+    if(($request->get("range"))&&($request->get("user_email"))&&($request->get("disc")))
+    {
+        require("../itemMaster.php");
+        
+    }
+    else
+    {
+        return $app->redirect('/');
+    }
+});
 $app->run();
