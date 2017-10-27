@@ -30,4 +30,17 @@ $app->before(function(Request $request) use($app){
 $app->get("/",function() use($app){
     $app['twig']->render("index.html.twig");
 });
+$app->get('/getItems', function() use($app){
+    require("../classes/itemMaster.php");
+    $item=new itemMaster;
+    $item=$item->getItems();
+    if(is_array($items))
+    {
+        return json_encode($items);
+    }
+    else
+    {
+        return $items;
+    }
+});
 $app->run();
