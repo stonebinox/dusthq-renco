@@ -33,7 +33,7 @@ $app->get("/",function() use($app){
 $app->get('/getItems', function() use($app){
     require("../classes/itemMaster.php");
     $item=new itemMaster;
-    $item=$item->getItems();
+    $items=$item->getItems();
     if(is_array($items))
     {
         return json_encode($items);

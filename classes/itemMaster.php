@@ -50,7 +50,7 @@ class itemMaster
             $itemID=$this->item_id;
             $im="SELECT * FROM item_master WHERE iditem_master='$itemID'";
             $im=$app['db']->fetchAssoc($im);
-            if(($m!="")&&($im!=NULL))
+            if(($im!="")&&($im!=NULL))
             {
                 return $im;
             }
