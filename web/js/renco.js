@@ -46,6 +46,7 @@ app.controller("pre-book",function($scope,$http,$compile){
             $(form).attr("name","prebook");
             $(form).attr("method","post");
             $(form).attr("action","book");
+            $(form).attr("autocomplete","off");
             for(var i=0;i<items.length;i++){
                 var item=items[i];
                 var itemID=item.iditem_master;
@@ -55,6 +56,7 @@ app.controller("pre-book",function($scope,$http,$compile){
                 $(formGroup).addClass("form-group");
                     var label=document.createElement("label");
                     $(label).attr("for","item"+itemID);
+                    $(label).attr("ng-init","range"+itemID+"=1");
                     $(label).html(itemName+'&nbsp;<span class="badge" id="range'+itemID+'">{{range'+itemID+'}}</span>');
                     $(formGroup).append(label);
                     var range=document.createElement("input");
@@ -62,12 +64,12 @@ app.controller("pre-book",function($scope,$http,$compile){
                     $(range).attr("min","1");
                     $(range).attr("max","10");
                     $(range).val("1");
+                    $(range).attr("id","rangeinput"+itemID);
                     $(range).attr("ng-model","range"+itemID);
-                    $(range).attr("ng-init","range"+itemID+"=1");
                     $(range).addClass("form-control");
-                    $(range).attr("ng-change","getPrice("+itemID+")");
+                    $(range).attr("ng-change","getPrice()");
                     $(formGroup).append(range);
-                $("#itemlist").append(formGroup);
+                $(form).append(formGroup);
             }
             var formGroupEmail=document.createElement("div");
             $(formGroupEmail).addClass("form-group");
@@ -83,7 +85,7 @@ app.controller("pre-book",function($scope,$http,$compile){
                 $(emailField).addClass("form-control");
                 $(emailField).attr("required","true");
                 $(formGroupEmail).append(emailField);
-            $("#itemlist").append(formGroupEmail);
+            $(form).append(formGroupEmail);
             var formGroupNumber=document.createElement("div");
             $(formGroupNumber).addClass("form-group");
                 var numberLabel=document.createElement("label");
@@ -97,33 +99,31 @@ app.controller("pre-book",function($scope,$http,$compile){
                 $(numberField).attr("placeholder","Enter a valid mobile number");
                 $(numberField).addClass("form-control");
                 $(formGroupNumber).append(numberField);
-            $("#itemlist").append(formGroupNumber);
+            $(form).append(formGroupNumber);
             var buttonHolder=document.createElement("div");
             $(buttonHolder).addClass("text-center");
                 var button=document.createElement("button");
-                $(button).attr("type","button");
+                $(button).attr("type","submit");
                 $(button).addClass("btn btn-primary btn-lg");
                 $(button).html('Book for <span id="price">{{totalCost}}</span> kr./gang');
                 $(buttonHolder).html(button);
-            $("#itemlist").append(buttonHolder);
+            $(form).append(buttonHolder);
+            $("#itemlist").append(form);
             $compile("#itemlist")($scope);
         }
     };
-    $scope.getPrice=function(itemID){
-        var itemQuantity=parseInt($("#range"+itemID).text());
+    $scope.getPrice=function(){
         var items=$scope.itemArray.slice();
-        var pos=null;
+        var cost=399;
         for(var i=0;i<items.length;i++){
             var item=items[i];
-            if(item.iditem_master==itemID){
-                pos=i;
-                break;
-            }
-        }
-        if(pos!=null){
-            var item=items[pos];
+            var itemID=item.iditem_master;
             var itemPrice=item.item_price;
-            var cost=itemQuantity*itemPrice;
+            var itemQuantity=parseInt($("#rangeinput"+itemID).val());
+            if(itemQuantity>1){
+                var price=(itemQuantity-1)*itemPrice;
+                cost+=price;
+            }
             $scope.totalCost=cost;
         }
     };
