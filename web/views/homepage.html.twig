@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+{% block content %}
+<body>
+    <div class="container">
+        <img src="images/fc-logo.png" alt="Full Candidate" width="250" class="img-responsive" style="margin: 0 auto;cursor:pointer;" onclick="window.location='home'">
+        <hr>
+        <div class="text-center">
+            <div class="btn-group">
+                <button type="button" class="btn btn-primary" onclick="window.location='registration';">Employer login</button>
+                <button type="button" class="btn btn-info" onclick="window.location='jobs';">View jobs</button>
+            </div>
+        </div>
+        <hr>
+        <img src="images/homepage.jpg" alt="Full Candidate" class="img-responsive" style="margin: 0 auto;">
+        <br>
+        <br>
+    </div>
+    <div class="container-fluid">
+        <div id="myModal" class="modal fade" role="dialog"></div>
+    </div>
+    <div id="footer" onclick="window.location='https://twitter.com/thedustmakers';"></div>
+</body>
+{% endblock %}
