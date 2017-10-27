@@ -5,6 +5,11 @@
 body{
     background:url(../images/doodles.png);
 }
+h1{
+    font-family: Narrow, Arial, Helvetica, sans-serif;
+    letter-spacing:1px;
+    font-weight:bold;
+}
 #footer{
     position:fixed;
     bottom:0;
