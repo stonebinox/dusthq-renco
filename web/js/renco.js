@@ -163,6 +163,9 @@ app.controller("pre-book",function($scope,$http,$compile){
             $(form).append(buttonHolder);
             $("#itemlist").append(form);
             $compile("#itemlist")($scope);
+            $('[data-toggle="tooltip"]').tooltip({
+                trigger: "hover"
+            });
         }
     };
     $scope.getPrice=function(){
