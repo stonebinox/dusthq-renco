@@ -193,3 +193,7 @@ app.controller("pre-book",function($scope,$http,$compile){
         $("#"+id).addClass("btn-primary");
     };
 });
+app.controller("booking",function($scope,$http,$compile){
+    $scope.booking_id;
+    
+});

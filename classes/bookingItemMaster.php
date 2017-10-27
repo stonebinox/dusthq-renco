@@ -65,12 +65,12 @@ class bookingItemMaster extends bookingMaster
     {
         $app=$this->app;
         $bookingID=addslashes(htmlentities($bookingID));
-        bookingMaster::__construcr($bookingID);
+        bookingMaster::__construct($bookingID);
         if($this->bookingValid)
         {
             $itemID=addslashes(htmlentities($itemID));
             itemMaster::__construct($itemID);
-            if($this->validItem)
+            if($this->itemValid)
             {
                 $itemQuantity=addslashes(htmlentities($itemQuantity));
                 if(($itemQuantity!="")&&($itemQuantity!=NULL)&&(is_numeric($itemQuantity))&&($itemQuantity>0))

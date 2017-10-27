@@ -46,10 +46,10 @@ $app->get('/getItems', function() use($app){
 $app->post("/book",function(Request $request) use($app){
     if(($request->get("range"))&&($request->get("user_email"))&&($request->get("disc")))
     {
-        require("../itemMaster.php");
-        require("../discountMaster.php");
-        require("../bookingMaster.php");
-        require("../bookingItemMaster.php");
+        require("../classes/itemMaster.php");
+        require("../classes/discountMaster.php");
+        require("../classes/bookingMaster.php");
+        require("../classes/bookingItemMaster.php");
         $bookingItem=new bookingItemMaster;
         $mobile="";
         if($request->get("user_mobile"))
@@ -59,19 +59,33 @@ $app->post("/book",function(Request $request) use($app){
         $bookingResponse=$bookingItem->makeBooking($request->get("user_email"),$mobile,$request->get("disc"));
         if(strpos($bookingResponse,'BOOKING_MADE_')!==false)
         {
-            $e=explode("BOOKING_MADE_");
+            $e=explode("BOOKING_MADE_",$bookingResponse);
             $bookingID=trim($e[1]);
+            $app['session']->set('booking_id',$bookingID);
             $range=$request->get("range");
-            return json_encode($range);
+            $itemObj=new itemMaster;
+            $items=$itemObj->getItems();
+            for($i=0;$i<count($range);$i++)
+            {
+                $rangeValue=$range[$i];
+                $item=$items[$i];
+                $itemID=$item['iditem_master'];
+                $bookingItemResponse=$bookingItem->storeBookingItem($bookingID,$itemID,$rangeValue);
+                
+            }
+            return $app->redirect('/booking');
         }
         else
         {
-            return $bookingResponse;
+            return $app->redirect('/?err='.$bookingResponse);
         }
     }
     else
     {
         return $app->redirect('/');
     }
+});
+$app->get("/booking",function() use($app){
+    return $app['twig']->render("booking.html.twig");
 });
 $app->run();
