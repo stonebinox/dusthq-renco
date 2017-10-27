@@ -53,10 +53,32 @@ class bookingMaster extends discountMaster
     }
     function makeBooking($userEmail,$userMobile=NULL,$discount)
     {
+        $app=$this->app;
         $userEmail=trim(addslashes(htmlentities($userEmail)));
         if(($userEmail!="")&&($userEmail!=NULL)&&(filter_var($userEmail, FILTER_VALIDATE_EMAIL)))
         {
-
+            $userMobile=trim(addslashes(htmlentities($userMobile)));
+            if(($userMobile!="")&&($userMobile!=NULL)&&(strpos($userMobile,' ')==false))
+            {
+                $discount=addslashes(htmlentities($discount));
+                if(($discount!="")&&($discount!=NULL))
+                {
+                    $in="INSERT INTO booking_master (stat,timestamp,user_email,user_mobile,base_discount_period) VALUES ('2',NOW(),'$userEmail','$userMobile','$discount')";
+                    $in=$app['db']->executeQuery($in);
+                    $bm="SELECT idbooking_master FROM booking_master WHERE stat='2' AND user_email='$userEmail' AND user_mobile='$userMobile' ORDER BY idbooking_master DESC LIMIT 1";
+                    $bm=$app['db']->fetchAssoc($bm);
+                    $bookingID=$bm['idbooking_master'];
+                    return "BOOKING_MADE_".$bookingID;
+                }
+                else
+                {
+                    return "INVALID_PRE_DISCOUNT";
+                }
+            }
+            else
+            {
+                return "INVALID_USER_MOBILE";
+            }
         }
         else
         {

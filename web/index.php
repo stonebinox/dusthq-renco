@@ -47,7 +47,27 @@ $app->post("/book",function(Request $request) use($app){
     if(($request->get("range"))&&($request->get("user_email"))&&($request->get("disc")))
     {
         require("../itemMaster.php");
-        
+        require("../discountMaster.php");
+        require("../bookingMaster.php");
+        require("../bookingItemMaster.php");
+        $bookingItem=new bookingItemMaster;
+        $mobile="";
+        if($request->get("user_mobile"))
+        {
+            $mobile=$request->get("user_mobile");
+        }
+        $bookingResponse=$bookingItem->makeBooking($request->get("user_email"),$mobile,$request->get("disc"));
+        if(strpos($bookingResponse,'BOOKING_MADE_')!==false)
+        {
+            $e=explode("BOOKING_MADE_");
+            $bookingID=trim($e[1]);
+            $range=$request->get("range");
+            return json_encode($range);
+        }
+        else
+        {
+            return $bookingResponse;
+        }
     }
     else
     {
