@@ -90,12 +90,27 @@ $app->get("/booking",function() use($app){
 $app->get("/getBookingDetails",function() use ($app){
     if($app['session']->get("booking_id"))
     {
+        $bookingID=addslashes(htmlentities($app['session']->get("booking_id")));
         require("../classes/itemMaster.php");
         require("../classes/discountMaster.php");
         require("../classes/bookingMaster.php");
         require("../classes/bookingItemMaster.php");
-        $bookingItem=new bookingItemMaster;
-        
+        $bookingObj=new bookingMaster($bookingID);
+        $booking=$bookingObj->getBooking();
+        if(is_array($booking))
+        {
+            $bookingItemObj=new bookingItemMaster;
+            $bookingItems=$bookingItemObj->getBookingItems($bookingID);
+            if(is_array($bookingItems))
+            {
+                array_push($booking,$bookingItems);
+            }
+            return json_encode($booking);
+        }
+        else
+        {
+            return $booking;
+        }        
     }
     else
     {

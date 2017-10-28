@@ -85,5 +85,37 @@ class bookingMaster extends discountMaster
             return "INVALID_USER_EMAIL";
         }
     }
+    function getBooking() //to get a booking
+    {
+        if($this->bookingValid)
+        {
+            $app=$this->app;
+            $bookingID=$this->booking_id;
+            $bm="SELECT * FROM booking_master WHERE idbooking_master='$bookingID'";
+            $bm=$app['db']->fetchAssoc($bm);
+            if(($bm!="")&&($bm!=NULL))
+            {
+                $discountID=$bm['discount_master_iddiscount_master'];
+                if(($discountID!="")&&($dicountID!=NULL))
+                {
+                    discountMaster::__construct($discountID);
+                    $discount=discountMaster::getDiscount();
+                    if(is_array($discount))
+                    {
+                        $bm['discount_master_iddiscount_master']=$discount;
+                    }
+                }
+                return $bm;
+            }
+            else
+            {
+                return "INVALID_BOOKING_ID";
+            }
+        }
+        else
+        {
+            return "INVALID_BOOKING_ID";
+        }
+    }
 }
 ?>

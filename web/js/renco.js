@@ -204,12 +204,14 @@ app.controller("booking",function($scope,$http,$compile){
         .then(function success(response){
             response=response.data;
             if(typeof response == "object"){
-
+                console.assert(response);
             }
             else{
                 response=$.trim(response);
                 switch(response){
-                    
+                    case "INVALID_BOOKING_ID":
+                    window.location="/";
+                    break;
                 }
             }
         },

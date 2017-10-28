@@ -106,5 +106,76 @@ class bookingItemMaster extends bookingMaster
             return "INVALID_BOOKING_ID";
         }
     }
+    function getBookingItem()
+    {
+        if($this->bookingItemValid)
+        {
+            $app=$this->app;
+            $bookingItemID=$this->booking_item_id;
+            $bim="SELECT * FROM booking_item_id WHERE idbooking_item_id='$bookingItemID'";
+            $bim=$app['db']->fetchAssoc($bim);
+            if(($bim!="")&&($bim!=NULL))
+            {
+                $bookingID=$bim['booking_master_idbooking_master'];
+                bookingMaster::__construct($bookingID);
+                $booking=bookingMaster::getBooking();
+                if(is_array($booking))
+                {
+                    $bim['booking_master_idbooking_master']=$booking;
+                }
+                $itemID=$bim['item_master_iditem_master'];
+                itemMaster::__construct($itemID);
+                $item=itemMaster::getItem();
+                if(is_array($item))
+                {
+                    $bim['item_master_iditem_master']=$item;
+                }
+                return $bim;
+            }
+            else
+            {
+                return "INVALID_BOOKING_ITEM_ID";
+            }
+        }
+        else
+        {
+            return "INVALID_BOOKING_ITEM_ID";
+        }
+    }
+    function getBookingItems($bookingID)
+    {
+        $bookingID=addslashes(htmlentities($bookingID));
+        $app=$this->app;
+        bookingMaster::__construct($bookingID);
+        if($this->bookingValid)
+        {
+            $bim="SELECT idbooking_item_master FROM booking_item_master WHERE stat='1' AND booking_master_idbooking_master='$bookingID'";
+            $bim=$app['db']->fetchAll($bim);
+            $bookingItemArray=array();
+            for($i=0;$i<count($bim);$i++)
+            {
+                $bookingItem=$bim[$i];
+                $bookingItemID=$bookingItem['idbooking_item_master'];
+                $this->__construct($bookingItemID);
+                $bookingItemRow=$this->getBookingItem();
+                if(is_array($bookingItemRow))
+                {
+                    array_push($bookingItemArray,$bookingItemRow);
+                }
+            }
+            if(count($bookingItemArray)>0)
+            {
+                return $bookingItemArray;
+            }
+            else
+            {
+                return "NO_BOOKING_ITEMS_FOUND";
+            }
+        }
+        else
+        {
+            return "INVALID_BOOKING_ID";
+        }
+    }
 }
 ?>
