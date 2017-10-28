@@ -195,5 +195,26 @@ app.controller("pre-book",function($scope,$http,$compile){
 });
 app.controller("booking",function($scope,$http,$compile){
     $scope.booking_id;
-    
+
+});
+app.controller("booking",function($scope,$http,$compile){
+    $scope.totalCost=399;
+    $scope.getBookingDetails=function(){
+        $http.get("getBookingDetails")
+        .then(function success(response){
+            response=response.data;
+            if(typeof response == "object"){
+
+            }
+            else{
+                response=$.trim(response);
+                switch(response){
+                    
+                }
+            }
+        },
+        function failure(response){
+
+        });
+    };
 });

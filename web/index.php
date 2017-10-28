@@ -71,7 +71,6 @@ $app->post("/book",function(Request $request) use($app){
                 $item=$items[$i];
                 $itemID=$item['iditem_master'];
                 $bookingItemResponse=$bookingItem->storeBookingItem($bookingID,$itemID,$rangeValue);
-                
             }
             return $app->redirect('/booking');
         }
@@ -87,5 +86,20 @@ $app->post("/book",function(Request $request) use($app){
 });
 $app->get("/booking",function() use($app){
     return $app['twig']->render("booking.html.twig");
+});
+$app->get("/getBookingDetails",function() use ($app){
+    if($app['session']->get("booking_id"))
+    {
+        require("../classes/itemMaster.php");
+        require("../classes/discountMaster.php");
+        require("../classes/bookingMaster.php");
+        require("../classes/bookingItemMaster.php");
+        $bookingItem=new bookingItemMaster;
+        
+    }
+    else
+    {
+        return "INVALID_BOOKING_ID";
+    }
 });
 $app->run();

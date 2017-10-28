@@ -2,7 +2,74 @@
 {% block content %}
 <body ng-app="renco">
     <div class="container" ng-controller="booking">
-        <h1 class="text-center">Complete your booking</h1>
+        <div class="row">
+            <h1 class="text-center">Complete your booking</h1>
+            <h4 class="text-center">A few more details and we are ready to complete your booking.</h4>
+            <hr>
+        </div>
+        <div class="row">
+            <div class="col-sm-8">
+                <form method="post" action="confirmBooking">
+                    <h3>Contact Information</h3>
+                    <p>Your contact information is used to reach out to you regarding your cleaning.</p>
+                    <div class="well">
+                        <div class="form-group">
+                            <label for="first_name">First name</label>
+                            <input type="text" class="form-control" name="first_name" id="first_name" placeholder="Your first name">
+                        </div>
+                        <div class="form-group">
+                            <label for="first_name">Last name</label>
+                            <input type="text" class="form-control" name="last_name" id="last_name" placeholder="Your last name">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-sm-4">
+                <div class="well">
+                    <p class="text-center">
+                        <label>Your quote is</label>
+                    </p>
+                    <h1 class="text-center">kr. {{totalCost}}</h1>
+                    <div class="well" id="bookingdetails">
+                        <div class="text-center"><img src="images/ripple.gif" border=0 alt="Loading ..." width=40 height=40></div>
+                    </div>
+                    <hr>
+                    <h1 class="text-center">100%</h1>
+                    <h3 class="text-center">Satisfaction Guarantee!</h3>
+                    <p class="text-center">If you are not satisfied with our cleaning, please contact us immediately and we will send a new team to do the job - at no cost!</p>
+                    <hr>
+                    <p class="text-center">
+                        <label>What our customers say ...</label>
+                    </p>
+                    <p class="text-center">
+                        <em>"The cleaning far exceeded my expectations! It is probably the best cleaning aid I have hired. Thank you!"</em>
+                    </p>
+                    <p class="text-center">
+                        <span class="glyphicon glyphicon-star"></span>
+                        <span class="glyphicon glyphicon-star"></span>
+                        <span class="glyphicon glyphicon-star"></span>
+                        <span class="glyphicon glyphicon-star"></span>
+                        <span class="glyphicon glyphicon-star"></span>
+                    </p>
+                    <p class="small text-center">Sofie Bingham from Copenhagen</p>
+                    <script type="text/javascript">
+                    <!--
+                    $(".glyphicon-star").css("color","yellow");
+                    //-->
+                    </script>
+                    <hr>
+                    <p class="text-center">
+                        <label>Questions?</label>
+                    </p>
+                    <p class="text-center">
+                        <a href="https://renco.dk/vi-tilbyder/almindelig-rengoering/#standard" target="_blank">What is included in an ordinary cleaning?</a><br>
+                        <a href="https://renco.dk/hjaelp/" target="_blank">Get answers to frequently asked questions here.</a>
+                    </p>
+                    <hr>
+                    <p class="text-center"><label>Need help?</label><br>Call us at 7199 1913</p>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="container-fluid">
         <div id="myModal" class="modal fade" role="dialog"></div>

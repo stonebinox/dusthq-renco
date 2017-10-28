@@ -26,19 +26,26 @@ class bookingMaster extends discountMaster
         {
             $app=$this->app;
             $bookingID=$this->booking_id;
-            $bm="SELECT discount_master_iddiscount_master FROM booking_master WHERE stat='1' AND idbooking_master='$bookingID'";
+            $bm="SELECT discount_master_iddiscount_master FROM booking_master WHERE stat!='0' AND idbooking_master='$bookingID'";
             $bm=$app['db']->fetchAssoc($bm);
             if(($bm!="")&&($bm!=NULL))
             {
                 $discountID=$bm['discount_master_iddiscount_master'];
-                discountMaster::__construct($discountID);
-                if($this->discountValid)
+                if(($discountID!="")&&($discountID!=NULL))
                 {
-                    return true;
+                    discountMaster::__construct($discountID);
+                    if($this->discountValid)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
                 }
                 else
                 {
-                    return false;
+                    return true;
                 }
             }
             else

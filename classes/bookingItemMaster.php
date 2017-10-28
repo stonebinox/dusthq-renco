@@ -82,7 +82,7 @@ class bookingItemMaster extends bookingMaster
                         $in="INSERT INTO booking_item_master (timestamp,booking_master_idbooking_master,item_master_iditem_master,item_quantity) VALUES (NOW(),'$bookingID','$itemID','$itemQuantity')";
                         $in=$app['db']->executeQuery($in);
                         $bim="SELECT idbooking_item_master FROM booking_item_master WHERE stat='1' AND booking_master_idbooking_master='$bookingID' AND item_master_iditem_master='$itemID' AND item_quantity='$itemQuantity' ORDER BY idbooking_item_master DESC LIMIT 1";
-                        $bim=$app['db']->fetchAssoc($bm);
+                        $bim=$app['db']->fetchAssoc($bim);
                         $bookingItemID=$bim['idbooking_item_master'];
                         return "BOOKING_ITEM_ADDED_".$bookingItemID;
                     }
