@@ -15,11 +15,11 @@
                         <p>Your contact information is used to reach out to you regarding your cleaning.</p>
                         <div class="form-group">
                             <label for="first_name">First name</label>
-                            <input type="text" class="form-control" name="first_name" id="first_name" placeholder="Your first name">
+                            <input type="text" class="form-control" name="first_name" id="first_name" placeholder="Your first name" required>
                         </div>
                         <div class="form-group">
                             <label for="first_name">Last name</label>
-                            <input type="text" class="form-control" name="last_name" id="last_name" placeholder="Your last name">
+                            <input type="text" class="form-control" name="last_name" id="last_name" placeholder="Your last name" required>
                         </div>
                         <div class="form-group">
                             <label for="user_email">Email</label>
@@ -34,7 +34,63 @@
                     <div class="well">
                         <h3>Your Address</h3>
                         <p>Where do we clean?</p>
+                        <div class="form-group">
+                            <label for="address">Address</label>
+                            <input type="text" name="address" id="address" placeholder="Your address so we can find you" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="city">City</label>
+                            <input type="text" name="city" id="city" placeholder="Ciy name" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="postcode">Post code</label>
+                            <input type="number" name="postcode" id="postcode" placeholder="Valid post code" class="form-control" required>
+                        </div>
                     </div>
+                    <hr>
+                    <div class="well">
+                        <h3>Select Additional Services</h3>
+                        <p>Customize your cleaning with these additional services.</p>
+                        <p>For moving or main cleaning, all additional services are included in the price.</p>
+                        <div class="text-center" id="itemlist">
+                            <img src="images/ripple.gif" border=0 alt="Loading ..." width=40 height=40>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="well">
+                        <h3>When Do We Come By?</h3>
+                        <div class="form-group">
+                            <label>Select date and time</label>
+                            <input type="datetime-local" name="datetime" id="datetime" class="form-control" required>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="well">
+                        <h3>Additional Information</h3>
+                        <div class="form-group">
+                            <label>How do we access your home?</label>
+                            <select name="homeaccess[]" class="form-control">
+                                <option value="-1">Select an option</option>
+                                <option value="athome">I am at home</option>
+                                <option value="key">I put the key underneath the map</option>
+                                <option value="neighbour">The key can be picked up from the neighbour</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>How did you find us?</label>
+                            <select name="findus[]" class="form-control">
+                                <option value="-1">Select an option</option>
+                                <option value="google">Google</option>
+                                <option value="bing">Bing</option>
+                                <option value="facebook">Facebook</option>
+                                <option value="rec">Recommendation</option>
+                            </select>
+                        </div>
+                    </div>
+                    <br>
+                    <br>
+                    <br>
                 </form>
             </div>
             <div class="col-sm-4">

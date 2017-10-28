@@ -55,25 +55,28 @@ app.controller("pre-book",function($scope,$http,$compile){
                 var itemID=item.iditem_master;
                 var itemName=stripslashes(item.item_name);
                 var itemPrice=item.item_price;
-                var formGroup=document.createElement("div");
-                $(formGroup).addClass("form-group");
-                    var label=document.createElement("label");
-                    $(label).attr("for","item"+itemID);
-                    $(label).attr("ng-init","range"+itemID+"=1");
-                    $(label).html(itemName+'&nbsp;<span class="badge" id="range'+itemID+'">{{range'+itemID+'}}</span>');
-                    $(formGroup).append(label);
-                    var range=document.createElement("input");
-                    $(range).attr("type","range");
-                    $(range).attr("min","1");
-                    $(range).attr("max","10");
-                    $(range).val("1");
-                    $(range).attr("id","rangeinput"+itemID);
-                    $(range).attr("ng-model","range"+itemID);
-                    $(range).addClass("form-control");
-                    $(range).attr("ng-change","getPrice()");
-                    $(formGroup).append(range);
-                    $(formGroup).append('<input type="hidden" name="range[]" value="{{range'+itemID+'}}">');
-                $(form).append(formGroup);
+                var itemType=item.primary_flag;
+                if(itemType==1){
+                    var formGroup=document.createElement("div");
+                    $(formGroup).addClass("form-group");
+                        var label=document.createElement("label");
+                        $(label).attr("for","item"+itemID);
+                        $(label).attr("ng-init","range"+itemID+"=1");
+                        $(label).html(itemName+'&nbsp;<span class="badge" id="range'+itemID+'">{{range'+itemID+'}}</span>');
+                        $(formGroup).append(label);
+                        var range=document.createElement("input");
+                        $(range).attr("type","range");
+                        $(range).attr("min","1");
+                        $(range).attr("max","10");
+                        $(range).val("1");
+                        $(range).attr("id","rangeinput"+itemID);
+                        $(range).attr("ng-model","range"+itemID);
+                        $(range).addClass("form-control");
+                        $(range).attr("ng-change","getPrice()");
+                        $(formGroup).append(range);
+                        $(formGroup).append('<input type="hidden" name="range[]" value="{{range'+itemID+'}}">');
+                    $(form).append(formGroup);
+                }
             }
             var formGroupEmail=document.createElement("div");
             $(formGroupEmail).addClass("form-group");
@@ -199,6 +202,8 @@ app.controller("booking",function($scope,$http,$compile){
     $scope.discount=0;
     $scope.booking_id=null;
     $scope.userEmail="Loading email ...";
+    $scope.itemArray=[];
+    $scope.selectedItems=[];
     $scope.getBookingDetails=function(){
         $http.get("getBookingDetails")
         .then(function success(response){
@@ -294,6 +299,7 @@ app.controller("booking",function($scope,$http,$compile){
             $("#bookingdetails").append(p);
             $compile("#bookingdetails")($scope);
             $scope.getPrice();
+            $scope.getItems();
         }
         else{
             //cancel booking
@@ -320,5 +326,104 @@ app.controller("booking",function($scope,$http,$compile){
         cost=cost-((discount/100)*cost);
         $scope.totalCost=cost;
         $("#cost").html($scope.totalCost);
+    };
+    $scope.addCost=function(itemID){
+        if($scope.selectedItems.indexOf(itemID)==-1){
+            var items=$scope.itemArray.slice();
+            var pos=null;
+            for(var i=0;i<items.length;i++){
+                var item=items[i];
+                if(item.iditem_master==itemID){
+                    pos=i;
+                    break;
+                }
+            }
+            if(pos!=null){
+                $scope.selectedItems.push(itemID);
+                var item=items[pos];
+                var itemCost=item.item_price;
+                $scope.totalCost=parseInt($scope.totalCost)+parseInt(itemCost);
+                $("#cost").html($scope.totalCost);
+            }
+        }
+        else{
+            messageBox("Already Added","This item has already been added!");
+        }
+    };
+    $scope.getItems=function(){
+        $http.get("getItems")
+        .then(function success(response){
+            response=response.data;
+            if((validate(response))&&(response!="INVALID_PARAMETERS"))
+            {
+                if(typeof response=="object"){
+                    $scope.itemArray=response.slice();
+                    $scope.displayItems();
+                }
+                else{
+                    response=$.trim(response);
+                    switch(response){
+                        case "NO_ITEMS_FOUND":
+                        messageBox("No Items","The site is still under development. Please try again later!");
+                        break;
+                        default:
+                        console.log(response);
+                        break;
+                    }
+                }
+            }
+            else{
+                messageBox("Problem","Something went wrong while loading some data. Please try again later. This is the error we see: "+response);
+            }
+        },
+        function failure(response){
+            messageBox("Problem","Something went wrong while loading some data. Please try again later. This is the error we see: "+response);
+        });
+    };
+    $scope.displayItems=function(){
+        if($scope.itemArray.length!=0){
+            var items=$scope.itemArray.slice();
+            var row=document.createElement("div");
+            $(row).addClass("row");
+            for(var i=0,j=i+1;i<items.length;i++,j++){
+                var item=items[i];
+                var itemID=item.iditem_master;
+                var itemName=stripslashes(item.item_name);
+                var itemPrice=item.item_price;
+                var itemType=item.primary_flag;
+                var itemImage=item.item_image;
+                if(!validate(itemImage)){
+                    itemImage='images/no-image.png';
+                }
+                if(itemType==0){
+                    var colMd4=document.createElement("div");
+                    $(colMd4).addClass("col-md-4");
+                    $(colMd4).attr("id","item"+itemID);
+                        var thumbnail=document.createElement("div");
+                        $(thumbnail).addClass("thumbnail");
+                            var a=document.createElement("a");
+                            $(a).attr("href","#");
+                            $(a).attr("ng-click","addCost("+itemID+")");
+                            $(a).attr("data-toggle","tooltip");
+                            $(a).attr("title","Add this add-on");
+                            $(a).attr("data-placement","auto");
+                                var img=document.createElement("img");
+                                $(img).attr("src",itemImage);
+                                $(img).css("width","60%");
+                            $(a).append(img);
+                                var caption=document.createElement("div");
+                                $(caption).html(itemName+" at kr. "+itemPrice);
+                            $(a).append(caption);
+                        $(thumbnail).append(a);
+                    $(colMd4).append(thumbnail);
+                    $(row).append(colMd4);
+                }
+            }
+            $("#itemlist").html(row);
+            $compile("#itemlist")($scope);
+            $('[data-toggle="tooltip"]').tooltip({
+                trigger: "hover"
+            });
+        }
     };
 });
