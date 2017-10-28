@@ -194,17 +194,18 @@ app.controller("pre-book",function($scope,$http,$compile){
     };
 });
 app.controller("booking",function($scope,$http,$compile){
-    $scope.booking_id;
-
-});
-app.controller("booking",function($scope,$http,$compile){
     $scope.totalCost=399;
+    $scope.bookingArray=[];
+    $scope.discount=0;
+    $scope.booking_id=null;
+    $scope.userEmail="Loading email ...";
     $scope.getBookingDetails=function(){
         $http.get("getBookingDetails")
         .then(function success(response){
             response=response.data;
             if(typeof response == "object"){
-                console.assert(response);
+                $scope.bookingArray=response;
+                $scope.displayBookingDetails();
             }
             else{
                 response=$.trim(response);
@@ -212,11 +213,112 @@ app.controller("booking",function($scope,$http,$compile){
                     case "INVALID_BOOKING_ID":
                     window.location="/";
                     break;
+                    default:
+                    messageBox("Problem","Something went wrong while loading your booking details. Please try again later. This is the error we see: "+response);
+                    break;
                 }
             }
         },
         function failure(response){
-
+            messageBox("Problem","Something went wrong while loading your booking details. Please try again later. This is the error we see: "+responseText);
         });
+    };
+    $scope.displayBookingDetails=function(){
+        var booking=$scope.bookingArray;
+        var bookingItems=booking[0];
+        var bookingID=booking.idbooking_master;
+        $scope.booking_id=bookingID;
+        var discountPeriod=booking.base_discount_period;
+        var userEmail=booking.user_email;
+        $("#user_email").html(userEmail);
+        var userMobile=booking.user_mobile;
+        if(validate(userMobile)){
+            $("#user_mobile").html(userMobile);
+        }
+        else{
+            $("#user_mobile_holder").html('<input type="tel" name="user_mobile" id="user_mobile" placeholder="Enter a valid number" class="form-control">');
+        }
+        var discountText='Single payment';
+        switch(discountPeriod){
+            case "0week":
+            case "4week":
+            discountText="Every 4 weeks";
+            default:
+            $scope.discount=0;
+            break;
+            case "1week":
+            $scope.discount=20;
+            discountText="Every 1 week";
+            break;
+            case "2week":
+            $scope.discount=10;
+            discountText="Every 2 weeks";
+            break;
+        }
+        if(bookingItems.length>0){
+            var table=document.createElement("table");
+            $(table).addClass("table");
+                var thead=document.createElement("thead");
+                    var tr=document.createElement("tr");
+                        var th1=document.createElement("th");
+                        $(th1).html("Type");
+                    $(tr).append(th1);
+                        var th2=document.createElement("th");
+                        $(th2).html("Quantity");
+                    $(tr).append(th2);
+                $(thead).append(tr);
+            $(table).append(thead);
+                var tbody=document.createElement("tbody");
+            for(var i=0;i<bookingItems.length;i++){
+                var bookingItem=bookingItems[i];
+                var item=bookingItem.item_master_iditem_master;
+                var itemID=item.item_master_iditem_master;
+                var itemName=stripslashes(item.item_name);
+                var itemQuantity=bookingItem.item_quantity;
+                var tr1=document.createElement("tr");
+                    var td1=document.createElement("td");
+                    $(td1).html(itemName);
+                $(tr1).append(td1);
+                    var td2=document.createElement("td");
+                    $(td2).html(itemQuantity);
+                $(tr1).append(td2);
+                $(tbody).append(tr1);
+            }
+            $(table).append(tbody);
+            $("#bookingdetails").html(table);
+            var p=document.createElement("p");
+                var label=document.createElement("label");
+                $(label).html("Frequency");
+            $(p).html(label);
+            $(p).append(' '+discountText+' at {{discount}}%');
+            $("#bookingdetails").append(p);
+            $compile("#bookingdetails")($scope);
+            $scope.getPrice();
+        }
+        else{
+            //cancel booking
+        }
+    }
+    $scope.getPrice=function(){
+        var booking=$scope.bookingArray;
+        var items=booking[0];
+        var cost=399;
+        for(var i=0;i<items.length;i++){
+            var bookingItem=items[i];
+            var bookingItemID=bookingItem.idbooking_item_master;
+            var itemQuantity=bookingItem.item_quantity;
+            var item=bookingItem.item_master_iditem_master;
+            var itemID=item.iditem_master;
+            var itemName=stripslashes(item.item_name);
+            var itemPrice=item.item_price;
+            if(itemQuantity>1){
+                var price=(itemQuantity-1)*itemPrice;
+                cost+=price;
+            }
+        }
+        var discount=$scope.discount;
+        cost=cost-((discount/100)*cost);
+        $scope.totalCost=cost;
+        $("#cost").html($scope.totalCost);
     };
 });

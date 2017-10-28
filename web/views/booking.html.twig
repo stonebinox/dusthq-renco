@@ -10,9 +10,9 @@
         <div class="row">
             <div class="col-sm-8">
                 <form method="post" action="confirmBooking">
-                    <h3>Contact Information</h3>
-                    <p>Your contact information is used to reach out to you regarding your cleaning.</p>
                     <div class="well">
+                        <h3>Contact Information</h3>
+                        <p>Your contact information is used to reach out to you regarding your cleaning.</p>
                         <div class="form-group">
                             <label for="first_name">First name</label>
                             <input type="text" class="form-control" name="first_name" id="first_name" placeholder="Your first name">
@@ -21,15 +21,28 @@
                             <label for="first_name">Last name</label>
                             <input type="text" class="form-control" name="last_name" id="last_name" placeholder="Your last name">
                         </div>
+                        <div class="form-group">
+                            <label for="user_email">Email</label>
+                            <p class="form-control-static" id="user_email">Loading email ...</p>
+                        </div>
+                        <div class="form-group">
+                            <label for="user_mobile">Mobile (optional)</label>
+                            <span id="user_mobile_holder"><p class="form-control-static" id="user_mobile">Loading mobile ...</p></span>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="well">
+                        <h3>Your Address</h3>
+                        <p>Where do we clean?</p>
                     </div>
                 </form>
             </div>
             <div class="col-sm-4">
-                <div class="well">
+                <div class="well" ng-init="getBookingDetails()">
                     <p class="text-center">
                         <label>Your quote is</label>
                     </p>
-                    <h1 class="text-center">kr. {{totalCost}}</h1>
+                    <h1 class="text-center">kr. <span id="cost">{{totalCost}}</span></h1>
                     <div class="well" id="bookingdetails">
                         <div class="text-center"><img src="images/ripple.gif" border=0 alt="Loading ..." width=40 height=40></div>
                     </div>
@@ -67,6 +80,11 @@
                     </p>
                     <hr>
                     <p class="text-center"><label>Need help?</label><br>Call us at 7199 1913</p>
+                    <hr>
+                    <p class="text-center">
+                        All prices are inclusive of VAT.<br><br>
+                        <img src="images/powered_by_stripe.png" border=0 alt="Stripe" class="img-responsive" style="margin:0 auto;" width=100>
+                    </p>
                 </div>
             </div>
         </div>

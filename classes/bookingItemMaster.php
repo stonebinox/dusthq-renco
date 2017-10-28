@@ -112,7 +112,7 @@ class bookingItemMaster extends bookingMaster
         {
             $app=$this->app;
             $bookingItemID=$this->booking_item_id;
-            $bim="SELECT * FROM booking_item_id WHERE idbooking_item_id='$bookingItemID'";
+            $bim="SELECT * FROM booking_item_master WHERE idbooking_item_master='$bookingItemID'";
             $bim=$app['db']->fetchAssoc($bim);
             if(($bim!="")&&($bim!=NULL))
             {
